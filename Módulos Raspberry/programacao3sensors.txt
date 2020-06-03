@@ -1,0 +1,89 @@
+// intensidade luminosa
+#include <Wire.h>
+#include <BH1750.h>
+BH1750 lightMeter(0x23);
+// poeira e fumaça
+int pin = 8;
+unsigned long duration;
+unsigned long starttime;
+unsigned long sampletime_ms = 30000;//sampe 30s ;
+unsigned long lowpulseoccupancy = 0;
+float ratio = 0;
+float concentration = 0;
+// qualidade do ar
+#include "Air_Quality_Sensor.h"
+
+AirQualitySensor sensor(A0);
+
+void setup(){
+  Serial.begin(9600);
+//intensidade luminosa
+  Wire.begin();
+  
+  if (lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE)) {
+    Serial.println(F("BH1750 Advanced begin"));
+  }
+  else {
+    Serial.println(F("Error initialising BH1750"));
+  }
+  // poeira e fumaça
+pinMode(8,INPUT);
+ starttime = millis();//get the current time;
+
+// qualidade do ar
+while (!Serial);
+
+  Serial.println("Waiting sensor to init...");
+  delay(20000);
+  
+  if (sensor.init()) {
+    Serial.println("Sensor ready.");
+  }
+  else {
+    Serial.println("Sensor ERROR!");
+  }
+}
+  
+
+void loop() {
+  //intensidade luminosa
+  float lux = lightMeter.readLightLevel();
+  Serial.print("Light: ");
+  Serial.print(lux);
+  Serial.println(" lx");
+  delay(10000);
+  // poeira e fumaça
+duration = pulseIn(pin, LOW);
+ lowpulseoccupancy = lowpulseoccupancy+duration;
+ if ((millis()-starttime) > sampletime_ms)//if the sampel time == 30s
+ {
+ ratio = lowpulseoccupancy/(sampletime_ms*10.0); // Integer percentage 0=>100
+ concentration = 1.1*pow(ratio,3)-3.8*pow(ratio,2)+520*ratio+0.62; // using spec sheet curve
+ Serial.print("concentration = ");
+ Serial.print(concentration);
+ Serial.println(" pcs/0.01cf");
+ Serial.println("\n");
+ lowpulseoccupancy = 0;
+ starttime = millis();
+ }
+ // qualidade do ar
+int quality = sensor.slope();
+
+  Serial.print("Sensor value: ");
+  Serial.println(sensor.getValue());
+  
+  if (quality == AirQualitySensor::FORCE_SIGNAL) {
+    Serial.println("High pollution! Force signal active.");
+  }
+  else if (quality == AirQualitySensor::HIGH_POLLUTION) {
+    Serial.println("High pollution!");
+  }
+  else if (quality == AirQualitySensor::LOW_POLLUTION) {
+    Serial.println("Low pollution!");
+  }
+  else if (quality == AirQualitySensor::FRESH_AIR) {
+    Serial.println("Fresh air.");
+  }
+  
+  delay(1000);
+}
