@@ -1,0 +1,17 @@
+Módulo central:
+Raspberry Pi 3B+ --> está com conectação serial com Arduino Mega --> está conectado os sensores de Som, Lux, CO2 e Qualidade do Ar. O Raspberry Pi 3B+ também está conectado aos módulos periféricos através da conexão Bluetooth.
+
+Módulos Periféricos:
+São constituidos de um Arduino Nano, alimentado por uma bateria 5V. No Arduino estão conectados os sensores e um Módulo Bluetooth RS232 HC-05. Esses módulos estão conectados com o Raspbery Pi 3B+ através da conexão Bluetooth.
+Cada módulo serve para um dada finalidade. 
+
+Módulo da Lâmpada (Para saber se a lâmpada está ligada ou desligada): Sensor de Luz LDR
+
+Módulo da Persiana (Para saber se a persiana está aberta ou fechada): Sensor de Obstáculo Infravermelho IR
+
+Módulo da Janela (Para saber se a janela está aberta ou fechada): Sensor de Fim de Curso (chave de fim de curso)
+
+Módulo da Porta (Para saber a quantidade de Lux ao entrar na sala): Sensor de Presença e Movimento Microondas RCWL-05
+								    Sensor de Luz BH1750FVI Lux
+
+Módulo do Ar-condicionado (Para saber se o ar-condicionado está ligado ou desligado e a sua temperatura): Sensor de Pressão e Temperatura Bmp180

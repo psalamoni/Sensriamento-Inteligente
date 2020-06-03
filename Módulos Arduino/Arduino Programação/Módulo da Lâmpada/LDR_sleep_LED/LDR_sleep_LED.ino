@@ -25,6 +25,6 @@ void sleep(){
   set_sleep_mode(SLEEP_MODE_PWR_DOWN); //ativa o modo sleep
   sleep_enable(); 
   digitalWrite(13, LOW); //liga o led
-  attachInterrupt(digitalPinToInterrupt(pinLDR), ldr, FALLING); //Interrupção "mudança" no pinLDR, vai ativar a função ldr.
+  attachInterrupt(digitalPinToInterrupt(pinLDR), ldr, CHANGE); //Interrupção "mudança" no pinLDR, vai ativar a função ldr.
   sleep_cpu();
 }
